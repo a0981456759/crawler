@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<title>Python 走入現實：來爬蟲吧(1) - iT 邦幫忙::一起幫忙解決難題，拯救 IT 人的一天</title>
+
+<meta name="description" content="剛剛在想今天要寫什麼的時候....突然想到之前其實就有點想寫爬蟲的主題ＸＤ 所以就來寫一波！ 淺談網路與網頁 其實我們藉由瀏覽器打入網址看到的“網頁”，獲得的都是一種“資源”，而這個資源他所回傳的是H..."/>
+<meta name="keywords" content="iT邦幫忙,iThome">
+<meta name="author" content="iThome">
+<meta property="og:site_name" content="iT 邦幫忙::一起幫忙解決難題，拯救 IT 人的一天"/>
+<meta property="og:url" content="https://ithelp.ithome.com.tw/articles/10202103"/>
+<meta property="og:type" content="website"/>
+<meta property="og:title" content="Python 走入現實：來爬蟲吧(1) - iT 邦幫忙::一起幫忙解決難題，拯救 IT 人的一天"/>
+<meta property="og:image" content="https://ithelp.ithome.com.tw/storage/image/fbpic.jpg"/>
+<meta property="og:description" content="剛剛在想今天要寫什麼的時候....突然想到之前其實就有點想寫爬蟲的主題ＸＤ 所以就來寫一波！ 淺談網路與網頁 其實我們藉由瀏覽器打入網址看到的“網頁”，獲得的都是一種“資源”，而這個資源他所回傳的是H..."/>
+<meta property="fb:app_id" content="137875859607921" />
+
+<link rel="apple-touch-icon" sizes="57x57" href="https://ithelp.ithome.com.tw/storage/favicons/apple-touch-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="https://ithelp.ithome.com.tw/storage/favicons/apple-touch-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="https://ithelp.ithome.com.tw/storage/favicons/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="https://ithelp.ithome.com.tw/storage/favicons/apple-touch-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="https://ithelp.ithome.com.tw/storage/favicons/apple-touch-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="https://ithelp.ithome.com.tw/storage/favicons/apple-touch-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="https://ithelp.ithome.com.tw/storage/favicons/apple-touch-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="https://ithelp.ithome.com.tw/storage/favicons/apple-touch-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://ithelp.ithome.com.tw/storage/favicons/apple-touch-icon-180x180.png">
+<link rel="icon" type="image/png" href="https://ithelp.ithome.com.tw/storage/favicons/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="https://ithelp.ithome.com.tw/storage/favicons/android-chrome-192x192.png" sizes="192x192">
+<link rel="icon" type="image/png" href="https://ithelp.ithome.com.tw/storage/favicons/favicon-96x96.png" sizes="96x96">
+<link rel="icon" type="image/png" href="https://ithelp.ithome.com.tw/storage/favicons/favicon-16x16.png" sizes="16x16">
+<link rel="manifest" href="https://ithelp.ithome.com.tw/storage/favicons/manifest.json">
+<link rel="mask-icon" href="https://ithelp.ithome.com.tw/storage/favicons/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="msapplication-TileImage" content="https://ithelp.ithome.com.tw/storage/favicons/mstile-144x144.png">
+<meta name="theme-color" content="#ffffff">
+
+<link rel="stylesheet" href="https://ithelp.ithome.com.tw/css/bootstrap.min.css">
+<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css"/>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+<link rel="stylesheet" href="https://ithelp.ithome.com.tw/css/sweetalert.css">
+<link rel="stylesheet" href="https://ithelp.ithome.com.tw/lib/select2/css/select2.min.css">
+<link rel="stylesheet" href="https://ithelp.ithome.com.tw/css/google.css">
+<link rel="stylesheet" href="https://ithelp.ithome.com.tw/css/style.css?201909251100">
+<!-- highlight -->
+<link rel="stylesheet" href="https://ithelp.ithome.com.tw/css/railscasts.css">
+<!-- end -->
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+<!--messenger css-->
+    </head>
+
+<body>
+    <div class="header">
+    <div class="header__inner clearfix">
+        <h1 class="header__logo pull-left"><a href="/"><img src="https://ithelp.ithome.com.tw/storage/image/logo.svg" alt="iT邦幫忙" class="img-responsive"></a></h1>
+        <div class="header__promote">
+            <div class="a12word pull-right">
+                <div class="a12word__box">
+                    <script type="text/javascript" src="https://itadapi.ithome.com.tw/media/serve?type=T2&channel=ithome_forum&encoding=Utf8"> </script>
+                </div>
+                <div class="a12word__box">
+                    <script type="text/javascript" src="https://itadapi.ithome.com.tw/media/serve?type=T3&channel=ithome_forum&encoding=Utf8"> </script>
+                </div>
+                <div class="a12word__box">
+                    <script type="text/javascript" src="https://itadapi.ithome.com.tw/media/serve?type=T4&channel=ithome_forum&encoding=Utf8"> </script>
+                </div>
+            </div>
+
+            <div class="a970 pull-right">
+                <script src="https://itadapi.ithome.com.tw/media/serve?type=B1&channel=ithome_forum&encoding=Utf8"></script>
+            </div>
+        </div>
+    </div>
+
+    <nav class="menu">
+        <div class="menu__bg">
+            <div class="menu__container clearfix">
+                
+                <h1 class="menu__logo">
+                    <a href="/" class="menu__logo-link"><img src="https://ithelp.ithome.com.tw/storage/image/nav_logo.svg"  alt="iT邦幫忙"></a>
+                </h1>
+
+                                                                                                                
+                
+                <ul class="list-unstyled menu__left">
+                    <li class="menu__item">
+                        <a href="https://ithelp.ithome.com.tw/questions" class="menu__item-link  menu__item-link--pl">技術問答</a>
+                    </li>
+                    <li class="menu__item">
+                        <a href="https://ithelp.ithome.com.tw/articles?tab=tech" class="menu__item-link  menu__item-link--active ">技術文章</a>
+                    </li>
+                    
+                    <li class="menu__item">
+                        <a href="https://ithelp.ithome.com.tw/articles?tab=job" class="menu__item-link  hidden-xs" >iT 徵才</a>
+                    </li>
+                    
+                    <li class="menu__item">
+                        <a href="https://ithelp.ithome.com.tw/tags" class="menu__item-link  hidden-xs" >Tag</a>
+                    </li>
+                    <li class="menu__item">
+                        <a href="https://ithelp.ithome.com.tw/talks" class="menu__item-link  hidden-xs" >聊天室</a>
+                    </li>
+                    <li class="menu__item menu__item--ironman">
+                        <a href="https://ithelp.ithome.com.tw/2020-12th-ironman?sc=nav" target="_blank" class="menu__item-link hidden-xs" >鐵人賽</a>
+                    </li>
+                </ul>
+                
+
+                                    
+                    <ul class="list-unstyled menu__right">
+                        <li class="menu__item">
+                            <div id="searchDropdown" class="menu__search-btn">
+                                <span class="menu__search-toggle"></span>
+                            </div>
+                        </li>
+                        <li class="menu__item">
+                            <a href="https://ithelp.ithome.com.tw/users/login" class="menu__item-link">登入/註冊</a>
+                        </li>
+                    </ul>
+                            </div>
+        </div>
+
+        
+        <div class="menu__dropform">
+            <div class="menu__container">
+                <form method="GET" action="https://ithelp.ithome.com.tw/search" accept-charset="UTF-8" role="search" class="clearfix">
+                    <div class="pull-left">
+                        <input name="search" type="text" class="menu__search-input" placeholder="搜尋主題、問題或人">
+
+                        <input type="radio" class="radio-input" name="tab" value="question" id="searchQA" checked/>
+                        <label for="searchQA" class="radio-label">問答</label>
+
+                        <input type="radio" class="radio-input" name="tab" value="article" id="searchArticle"/>
+                        <label for="searchArticle" class="radio-label">文章</label>
+
+                        <input type="radio" class="radio-input" name="tab" value="tag" id="searchTag"/>
+                        <label for="searchTag" class="radio-label">Tag</label>
+
+                        <input type="radio" class="radio-input" name="tab" value="user" id="searchID"/>
+                        <label for="searchID" class="radio-label">邦友</label>
+
+                        <input type="radio" class="radio-input" name="tab" value="ironman" id="searchIronman"/>
+                        <label for="searchIronman" class="radio-label">鐵人賽</label>
+                    </div>
+                    <button type="submit" class="btn menu__dropform-btn">搜尋</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+    <div class="menu__mask"></div>
+</div>
+
+    
+            
+        <div class="container index-top">
+        <div class="row">
+            <div class="col-md-12 clearfix">
+                    <div class="leftside">
+        
+                
+                    <div class="ir-article-icon-10th clearfix">
+                 <a href="https://ithelp.ithome.com.tw/2019ironman" target="_blank" class="ir-article-icon-10th__frame">
+                <img src="https://ithelp.ithome.com.tw/storage/image/ir-article-10th.png" alt="" class="ir-article-icon-10th__img-bear">
+                    <p class="ir-article-icon-10th__text">2019 iT 邦幫忙鐵人賽</p>
+                    
+                </a>
+                    <img src="https://ithelp.ithome.com.tw/storage/image/ir-article-10th-2.png" alt="" class="ir-article-icon-10th__img-right" alt="2019 iT 邦幫忙鐵人賽">
+            </div>
+        
+        
+        <div class="qa-panel clearfix">
+            
+            
+                                                <div class="ir-article__days ir-article__days--self ">
+                        <div class="ir-article__days-word">DAY <span class="ir-article__days-num">
+                                                              16
+                                                      </span></div>
+                    </div>
+                            
+            <div class="qa-panel__side">
+                
+                <div class="qa-side">
+                    <div class="likeGroup">
+        <div class="likeGroup__arrow like_btn"
+                 data-type="article"
+                 data-id="10202103">
+                <i class="fa fa-caret-up"></i>
+        </div>
+        <div class="likeGroup__num">0</div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <div class="collection qa-collection"
+                data-toggle="tooltip"
+                data-placement="bottom"
+                title="加入收藏清單">
+        <a href="https://ithelp.ithome.com.tw/users/login" class="btn collection__btn collection_btn">
+            <i class="fa fa-star-o"></i>
+        </a>
+    </div>
+                </div>
+                
+            </div>
+            <div class="qa-panel__content">
+                <div class="qa-header">
+                    
+                    
+                                                                    <a href="https://ithelp.ithome.com.tw/2019ironman/self" class="group__badge group__badge--self">
+                                                        自我挑戰組
+                        </a>
+                                        <h3 class="ir-article__topic"><a href="https://ithelp.ithome.com.tw/users/20106999/ironman/1805">Python X 30</a>系列 第
+                    <span class="ir-article__topic-count">16</span> 篇
+                    </h3>
+
+                    
+
+
+                    <h2 class="qa-header__title ir-article__title">
+                                                Python 走入現實：來爬蟲吧(1)
+                    </h2>
+
+                    <div class="qa-header__tagGroup">
+                                                    <a href="https://ithelp.ithome.com.tw/tags/articles/2019%E9%90%B5%E4%BA%BA%E8%B3%BD"
+                               class="tag qa-header__tagList">2019鐵人賽</a>
+                                            </div>
+
+
+                    <div class="ir-article-info">
+                        
+                                                    <a href="https://ithelp.ithome.com.tw/users/20106999/ironman" class="ir-article-info__avatar">
+                                <img src="https://member.ithome.com.tw/avatars/125671?s=ithelp" class="img-circle"/>
+
+                            </a>
+                                                
+                        <div class="ir-article-info__content">
+                                                            <div><a href="https://ithelp.ithome.com.tw/users/20106999/ironman" class="ir-article-info__name">
+                                    r567tw
+                                </a></div>
+                            
+                            <div class="ir-article-info__view">1398 瀏覽</div>
+
+                            
+                            <div><a title="2018-10-16 23:07:02" class="qa-header__info-time ir-article-info__time">2018-10-16 23:07:02</a></div>
+                        </div>
+                    </div>
+
+
+
+
+
+                </div>
+                
+                <div class="qa-markdown">
+                    <div class="markdown">
+                        <div class="markdown__style">
+                                                            <p>剛剛在想今天要寫什麼的時候....突然想到之前其實就有點想寫爬蟲的主題ＸＤ<br />
+所以就來寫一波！</p>
+<h2>淺談網路與網頁</h2>
+<p>其實我們藉由瀏覽器打入網址看到的“網頁”，獲得的都是一種“資源”，而這個資源他所回傳的是HTML+CSS＋JS(當然對於‘api’來說，他有可能回傳的是'json'、’xml‘或者其他類型)。其實說穿了網頁前端說難不難說雜不雜，就是基於這三大天王。當然你會問，那麼我們常說的後端語言：php、ruby、或者是現在我們在談的python呢？我們總不可能拿前端來連資料庫吧（安全緣故）？沒錯！ 對於開發者的角度來說，我們是用這些後端語言，但如果你發現，其實後端語言都是會由CGI或者後端渲染的引擎，當你試著對網頁開啟右鍵檢查時，他還是HTML+CSS+JS啊！</p>
+<p>這裏還只是淺談，如果要繼續深入的話可以說非常非常多，預計30天鐵人賽都寫不完，這裏我極力推薦某個部落客寫的有關於http的文章以及一些我個人覺得可以更加深入的參考資料，淺顯明瞭、而且我也是讀過了對於網路、瀏覽器有更多的認識呢！</p>
+<ol>
+<li>NotFalse 技術客所寫的http教學系列<br />
+<a href="https://notfalse.net/http-series" target="_blank">https://notfalse.net/http-series</a>
+</li>
+<li>來做個網路瀏覽器吧！Let's build a web browser! 系列：去年某大大寫的鐵人賽系列，看不懂沒關係，我也看不是太懂XD 但前面幾篇文章多少對於瀏覽器如何運作或者網路如何操作會有更多的了解<br />
+<a href="https://ithelp.ithome.com.tw/users/20103745/ironman/1270" target="_blank">https://ithelp.ithome.com.tw/users/20103745/ironman/1270</a>
+</li>
+<li>維基或者google: 當然你也可以用wiki或自行google來幫助自己更加了解<br />
+<a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol" target="_blank">https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol</a>
+</li>
+</ol>
+<p><strong>總之，我們可以知道我們爬回來的東西就是一連串的文字，就是HTML+CSS+JS/除非你是對API 當然就獲得其他類型的資料</strong></p>
+<h2>環境建置</h2>
+<p>如果你不喜歡自己的環境太過髒亂，你想要有‘vitual’ 環境，那非常好，python3自己有內建，另外我自己或網路上也推薦‘virtualenv’這個modules</p>
+<p>如果想了解更多歡迎來到我自己的技術部落格。<br />
+<a href="https://tech.r567tw.tw/python_virtualenv-%E7%B0%A1%E5%96%AE%E7%AD%86%E8%A8%98/" target="_blank">https://tech.r567tw.tw/python_virtualenv-%e7%b0%a1%e5%96%ae%e7%ad%86%e8%a8%98/</a></p>
+<p>總之，時間不多 let's start!<br />
+我就先假設大家想要有一個不受污染的環境吧<br />
+先確定安裝好pip之後請執行</p>
+<pre><code>pip install virtualenv #安裝virtualenv這個環境
+virtualenv crawler #建立一個名字叫做crawler的虛擬環境
+source crawler/bin/activate #啟動這個crawler 這個環境(for mac)
+\crawler\Scripts\activate.bat #或者也可以執行這個指令 (for windows) [參考](https://programwithus.com/learn-to-code/Pip-and-virtualenv-on-Windows/)
+</code></pre>
+<p>你的環境如果有啟動的話應該可以看到你們前面會有個類似‘(crawler)’的字樣。<br />
+要離開的話就使用'deactivate'這個指令吧！<br />
+在虛擬環境之下/或者直接本機<br />
+請安裝幾個會需要用到爬蟲的module吧！</p>
+<pre><code>pip install requests #安裝一個可以發出網路request的module
+pip install BeautifulSoup4 #可以用這個module分析回傳回來的html+css+js
+</code></pre>
+<h2>牛刀小試一下</h2>
+<p>在想要不要一口氣談完爬蟲的同時我發現時間很晚了，所以就只好分個幾天慢慢說明好了。<br />
+前面說到我們的爬蟲通常會拿回來HTML+CSS+JS，那我們就來驗證一下吧！<br />
+建立crawler.py</p>
+<pre><code>import requests;
+from bs4 import BeautifulSoup;
+
+url=&quot;https://tw.yahoo.com/&quot;
+
+request=requests.get(url)
+content=request.content
+
+print(content)
+</code></pre>
+<p>執行後你看到了什麼呢？<br />
+是不是html+css+js呢？</p>
+<p>或者你也可以使用</p>
+<pre><code>print(type(content))
+</code></pre>
+<p>回傳了‘&lt;class 'bytes'&gt;’<br />
+bytes就是檔案的最小單位。</p>
+<p>如果還是很好奇我說的回傳的html+css+js （因為print出來有什麼x開頭的亂碼）<br />
+那麼我們試著把回傳回來的bytes 轉成string 寫入檔案中，我們可以這樣改寫：</p>
+<pre><code>import requests;
+from bs4 import BeautifulSoup;
+
+url=&quot;https://tw.yahoo.com/&quot;
+
+request=requests.get(url)
+content=request.content
+
+file = open('result.txt','w')
+file.write(content.decode('utf-8'))
+</code></pre>
+<p>執行後看看result.txt是不是就是網站的html+css+js呢？</p>
+<p>如果你今天頑皮一點把result.txt改為result.html呢？<br />
+哈哈！ 打開result.html就是“很像”的yahoo首頁啦～～ XD 但應該是不能work的首頁啦，畢竟你只是copy前端，yahoo的背後還有很多眉眉角角呢（我們剛剛談到的後端開發語言或資料庫或圖片等等）</p>
+ <br/>
+                                                    </div>
+                    </div>
+                </div>
+
+                
+                <div class="qa-action">
+    <ul class="list-inline qa-action__list">
+        <li>
+            <a href="#reply" class="qa-action__link qa-action__link--reply">
+                <i class="fa fa-comment fa-fw qa-action__icon"></i>留言            </a>
+        </li>
+        <li>
+            <a href="https://ithelp.ithome.com.tw/users/login" class="qa-action__trace">
+		<i class="fa fa-heart-o fa-fw qa-action__icon"></i>追蹤
+	</a>
+        </li>
+        <li class="pull-right">
+            <a href="https://ithelp.ithome.com.tw/users/login" class="qa-action__link qa-action__link-report report_btn">
+				<i class="fa fa-flag fa-fw qa-action__icon"></i>檢舉
+		</a>
+        </li>
+            </ul>
+</div>
+
+            </div>
+
+
+            
+            <div class="social-share clearfix">
+	<div id="fb-root"></div>
+	<script>(function(d, s, id) {
+	  var js, fjs = d.getElementsByTagName(s)[0];
+	  if (d.getElementById(id)) return;
+	  js = d.createElement(s); js.id = id;
+	  js.src = "//connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v2.6";
+	  fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));</script>
+	<div class="fb-like" data-href="https://ithelp.ithome.com.tw/articles/10202103" data-width="36px" data-layout="box_count" data-action="like" data-show-faces="false" data-share="false"></div>
+    <ul class="soc">
+	    <li><a class="soc-twitter" href="https://twitter.com/intent/tweet?text=https://ithelp.ithome.com.tw/articles/10202103" target="_blank"></a></li>
+	    <li><a class="soc-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://ithelp.ithome.com.tw/articles/10202103" target="_blank"></a></li>
+	    <li><a class="soc-google" href="https://plus.google.com/share?url=https://ithelp.ithome.com.tw/articles/10202103" target="_blank"></a></li>
+	    
+	</ul>
+</div>        </div>
+
+        
+        <div class="article-series">
+
+            
+                        <div class="clearfix article-series-page">
+                <div class="article-series-page__line"></div>
+                <div class="article-series-page__wrapper">
+                                            <a href="https://ithelp.ithome.com.tw/articles/10201684" class="article-series-page__link">
+                            <div class="article-series-page__arrow article-series-page__arrow--left"><i class="fa fa-fw fa-angle-left" aria-hidden="true"></i></div>
+                            <div class="article-series-page__content">
+                                <div class="article-series-page__text">上一篇</div>
+                                <div class="article-series-page__title">Python 走入現實：檔案</div>
+                            </div>
+                        </a>
+                                    </div>
+                <div class="article-series-page__wrapper text-right">
+                                            <a href="https://ithelp.ithome.com.tw/articles/10202457" class="article-series-page__link">
+                            <div class="article-series-page__arrow article-series-page__arrow--right"><i class="fa fa-fw fa-angle-right" aria-hidden="true"></i></div>
+                            <div class="article-series-page__content">
+                                <div class="article-series-page__text">下一篇</div>
+                                <div class="article-series-page__title">Python 走入現實：來爬蟲吧(2)</div>
+                            </div>
+                        </a>
+                                    </div>
+            </div>
+                        <div class="article-series-catalog">
+                <div class="article-series-catalog__badge">
+                    系列文
+                </div>
+                <div class="article-series-catalog__topic">
+                    <a href="https://ithelp.ithome.com.tw/users/20106999/ironman/1805" class="article-series-catalog__topic-link">Python X 30</a>
+                     共 <span class="article-series-catalog__num">30</span> 篇
+                </div>
+                <div class="clearfix">
+                    <div>
+                        <div class="article-series-catalog__title">目錄</div>
+
+                        <div class="pull-right subscription-group">
+                            <a href="https://ithelp.ithome.com.tw/rss/series/1805" class="rss-icon" target="_blank">
+                                <i class="fa fa-rss fa-fw" aria-hidden="true"></i>RSS系列文
+                            </a>
+                                                            <a href="https://ithelp.ithome.com.tw/users/login" class="article-series-catalog__subscription subscription-btn">
+                                    <i class="fa fa-bookmark-o fa-fw" aria-hidden="true"></i>訂閱系列文
+                                </a>
+                            
+                            <div class="article-series-catalog__subscription-num">
+                                <span class="subscription-amount">58</span> 人訂閱
+                            </div>
+                        </div>
+                    </div>
+                    <ol class="article-series-catalog__lists">
+                                                <li class="article-series-catalog__list">
+                            <div class="article-series-catalog__list-num">26</div>
+                            <a href="https://ithelp.ithome.com.tw/articles/10205480" class="article-series-catalog__link">Python 網頁：Django- 來做一個部落格(1)</a>
+                        </li>
+                                                <li class="article-series-catalog__list">
+                            <div class="article-series-catalog__list-num">27</div>
+                            <a href="https://ithelp.ithome.com.tw/articles/10205848" class="article-series-catalog__link">Python 網頁：Django- 來做一個部落格(2)</a>
+                        </li>
+                                                <li class="article-series-catalog__list">
+                            <div class="article-series-catalog__list-num">28</div>
+                            <a href="https://ithelp.ithome.com.tw/articles/10206066" class="article-series-catalog__link">Python 網頁：Flask</a>
+                        </li>
+                                                <li class="article-series-catalog__list">
+                            <div class="article-series-catalog__list-num">29</div>
+                            <a href="https://ithelp.ithome.com.tw/articles/10206423" class="article-series-catalog__link">Python 資料科學：Pandas</a>
+                        </li>
+                                                <li class="article-series-catalog__list">
+                            <div class="article-series-catalog__list-num">30</div>
+                            <a href="https://ithelp.ithome.com.tw/articles/10206797" class="article-series-catalog__link">Python 鐵人賽：遺珠之憾</a>
+                        </li>
+                                            </ol>
+                   
+
+                    <a href="https://ithelp.ithome.com.tw/users/20106999/ironman/1805"><i class="fa fa-fw fa-chevron-circle-right" aria-hidden="true"></i>完整目錄</a>
+                </div>
+            </div>
+        </div>
+        
+
+        
+        
+        
+
+        
+                
+        <div id="reply">
+                            <div class="reply-status">
+                                            <h4 class="text-center">尚未有邦友留言</h4>
+                                        <a href="https://ithelp.ithome.com.tw/users/login" class="btn btn-main">立即登入留言</a>
+                </div>
+                    </div>
+        
+
+    </div>
+    <div class="rightside">
+        <div class="sidebox">
+	<a href="https://ithelp.ithome.com.tw/ironman/?utm_source=ithelp&utm_medium=Banner300*100&utm_campaign=ironman12" target="_blank"><img src="/static/2020-12th-ironman/images/banner_signup.gif" alt="iT邦幫忙鐵人賽"></a>
+</div>
+
+
+    
+
+
+
+
+
+
+
+
+<div class="sidebox">
+    <div class="sidebox__header">
+        熱門問題
+    </div>
+    <div class="sidebox__body">
+        <ul class="list-unstyled sidebox__list">
+                            <li class="sidebox__item">
+                    <a href="https://ithelp.ithome.com.tw/questions/10199773" class="sidebox__itemLink">
+                        DBA問題 : 請問資料庫為何有人要vm虛擬化或是docker?
+                    </a>
+                </li>
+                            <li class="sidebox__item">
+                    <a href="https://ithelp.ithome.com.tw/questions/10199803" class="sidebox__itemLink">
+                        請問天心ERP是否被對岸天思惡性併吞了?
+                    </a>
+                </li>
+                            <li class="sidebox__item">
+                    <a href="https://ithelp.ithome.com.tw/questions/10199788" class="sidebox__itemLink">
+                        switch VS core switch
+                    </a>
+                </li>
+                            <li class="sidebox__item">
+                    <a href="https://ithelp.ithome.com.tw/questions/10199781" class="sidebox__itemLink">
+                        2020年假如換工作選多益、托福、雅思選哪個英文認證進修好?
+                    </a>
+                </li>
+                            <li class="sidebox__item">
+                    <a href="https://ithelp.ithome.com.tw/questions/10199819" class="sidebox__itemLink">
+                        outlook 設定
+                    </a>
+                </li>
+                            <li class="sidebox__item">
+                    <a href="https://ithelp.ithome.com.tw/questions/10199776" class="sidebox__itemLink">
+                        excel 找非空白的值
+                    </a>
+                </li>
+                            <li class="sidebox__item">
+                    <a href="https://ithelp.ithome.com.tw/questions/10199800" class="sidebox__itemLink">
+                        恐怖之問題:YT會自動點讚?
+                    </a>
+                </li>
+                            <li class="sidebox__item">
+                    <a href="https://ithelp.ithome.com.tw/questions/10199805" class="sidebox__itemLink">
+                        請問實際付給廠商的錢是含稅價 , 為何ERP原料成本不含稅呢?
+                    </a>
+                </li>
+                            <li class="sidebox__item">
+                    <a href="https://ithelp.ithome.com.tw/questions/10199782" class="sidebox__itemLink">
+                        有關MySQL與遠端連線PHP的問題
+                    </a>
+                </li>
+                            <li class="sidebox__item">
+                    <a href="https://ithelp.ithome.com.tw/questions/10199841" class="sidebox__itemLink">
+                        請問 http response 的問題
+                    </a>
+                </li>
+                    </ul>
+    </div>
+</div>
+
+<div class="sidebox">
+	<script src="https://itadapi.ithome.com.tw/media/serve?type=B2&channel=ithome_forum&encoding=Utf8"></script>
+	<div class="a19word">
+		<script type="text/javascript" src="https://itadapi.ithome.com.tw/media/serve?type=T1&channel=ithome_forum&encoding=Utf8"> </script>
+	</div>
+</div>
+
+<div class="sidebox">
+	<div id="fb-root"></div>
+	<script>(function(d, s, id) {
+	  var js, fjs = d.getElementsByTagName(s)[0];
+	  if (d.getElementById(id)) return;
+	  js = d.createElement(s); js.id = id;
+	  js.src = "//connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v2.5";
+	  fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));</script>
+
+	<div class="fb-page" data-href="https://www.facebook.com/ithelpfans/" data-width="300" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><div class="fb-xfbml-parse-ignore"><blockquote cite="https://www.facebook.com/ithelpfans/"><a href="https://www.facebook.com/ithelpfans/">IT邦幫忙</a></blockquote></div></div>
+</div>
+
+<div class="sidebox">
+    <div class="sidebox__header">
+        站方公告
+    </div>
+    <div class="sidebox__body">
+        <ul class="list-unstyled sidebox__list">
+                        <li class="sidebox__item">
+                <a href="https://ithelp.ithome.com.tw/announces/62" class="sidebox__itemLink">
+                    ☀ 場邊活動--IT神助攻 ☀ 9/1~10/15 不用報名、不限篇數，一起來分享你的 IT 好經驗
+                </a>
+            </li>
+                        <li class="sidebox__item">
+                <a href="https://ithelp.ithome.com.tw/announces/61" class="sidebox__itemLink">
+                    ☀ iT邦幫忙鐵人賽　熱烈報名中 ☀ 快按下【報名】跟熱血 IT 人們一起變強！
+                </a>
+            </li>
+                    </ul>
+    </div>
+</div>
+
+
+<div class="sidebox">
+    <div class="sidebox__header clearfix">
+        熱門tag
+        <a href="https://ithelp.ithome.com.tw/tags" class="sidebox__moreLink">看更多<i class="fa fa-caret-right fa-fw"></i></a>
+    </div>
+    <div class="sidebox__body">
+                    <a href="https://ithelp.ithome.com.tw/tags/questions/11th%E9%90%B5%E4%BA%BA%E8%B3%BD" class="tag sidebox__tagList">
+                11th鐵人賽
+            </a>
+                    <a href="https://ithelp.ithome.com.tw/tags/questions/%E9%90%B5%E4%BA%BA%E8%B3%BD" class="tag sidebox__tagList">
+                鐵人賽
+            </a>
+                    <a href="https://ithelp.ithome.com.tw/tags/questions/2019%E9%90%B5%E4%BA%BA%E8%B3%BD" class="tag sidebox__tagList">
+                2019鐵人賽
+            </a>
+                    <a href="https://ithelp.ithome.com.tw/tags/questions/2018%E9%90%B5%E4%BA%BA%E8%B3%BD" class="tag sidebox__tagList">
+                2018鐵人賽
+            </a>
+                    <a href="https://ithelp.ithome.com.tw/tags/questions/2017%E9%90%B5%E4%BA%BA%E8%B3%BD" class="tag sidebox__tagList">
+                2017鐵人賽
+            </a>
+                    <a href="https://ithelp.ithome.com.tw/tags/questions/javascript" class="tag sidebox__tagList">
+                javascript
+            </a>
+                    <a href="https://ithelp.ithome.com.tw/tags/questions/windows" class="tag sidebox__tagList">
+                windows
+            </a>
+                    <a href="https://ithelp.ithome.com.tw/tags/questions/windows%20server" class="tag sidebox__tagList">
+                windows server
+            </a>
+                    <a href="https://ithelp.ithome.com.tw/tags/questions/php" class="tag sidebox__tagList">
+                php
+            </a>
+                    <a href="https://ithelp.ithome.com.tw/tags/questions/linux" class="tag sidebox__tagList">
+                linux
+            </a>
+                    <a href="https://ithelp.ithome.com.tw/tags/questions/%E7%A8%8B%E5%BC%8F%E8%A8%AD%E8%A8%88" class="tag sidebox__tagList">
+                程式設計
+            </a>
+                    <a href="https://ithelp.ithome.com.tw/tags/questions/python" class="tag sidebox__tagList">
+                python
+            </a>
+                    <a href="https://ithelp.ithome.com.tw/tags/questions/%E5%88%86%E4%BA%AB" class="tag sidebox__tagList">
+                分享
+            </a>
+                    <a href="https://ithelp.ithome.com.tw/tags/questions/c%23" class="tag sidebox__tagList">
+                c#
+            </a>
+                    <a href="https://ithelp.ithome.com.tw/tags/questions/%E8%B3%87%E8%A8%8A%E5%AE%89%E5%85%A8" class="tag sidebox__tagList">
+                資訊安全
+            </a>
+                    <a href="https://ithelp.ithome.com.tw/tags/questions/%E8%81%B7%E5%A0%B4" class="tag sidebox__tagList">
+                職場
+            </a>
+                    <a href="https://ithelp.ithome.com.tw/tags/questions/%E5%B0%88%E6%A1%88%E7%AE%A1%E7%90%86" class="tag sidebox__tagList">
+                專案管理
+            </a>
+                    <a href="https://ithelp.ithome.com.tw/tags/questions/sql" class="tag sidebox__tagList">
+                sql
+            </a>
+                    <a href="https://ithelp.ithome.com.tw/tags/questions/%E5%B7%A5%E4%BD%9C" class="tag sidebox__tagList">
+                工作
+            </a>
+                    <a href="https://ithelp.ithome.com.tw/tags/questions/css" class="tag sidebox__tagList">
+                css
+            </a>
+            </div>
+</div>
+
+
+
+
+
+
+
+<div class="sidebox">
+    <div class="sidebox__header">
+        熱門回答
+    </div>
+    <div class="sidebox__body">
+        <ul class="list-unstyled sidebox__list">
+                            <li class="sidebox__item">
+                    <a href="https://ithelp.ithome.com.tw/questions/10199845" class="sidebox__itemLink">
+                        想問hinet非固定制固定IP問題
+                    </a>
+                </li>
+                            <li class="sidebox__item">
+                    <a href="https://ithelp.ithome.com.tw/questions/10199782" class="sidebox__itemLink">
+                        有關MySQL與遠端連線PHP的問題
+                    </a>
+                </li>
+                            <li class="sidebox__item">
+                    <a href="https://ithelp.ithome.com.tw/questions/10199791" class="sidebox__itemLink">
+                        請教 GPO 是否能套用到有加入網域的電腦的本機帳號上？
+                    </a>
+                </li>
+                            <li class="sidebox__item">
+                    <a href="https://ithelp.ithome.com.tw/questions/10199792" class="sidebox__itemLink">
+                        請問該如何知道使用的鼎新workflow GP版本?
+                    </a>
+                </li>
+                            <li class="sidebox__item">
+                    <a href="https://ithelp.ithome.com.tw/questions/10199799" class="sidebox__itemLink">
+                        VMware ESXi 6.7密碼無法登入
+                    </a>
+                </li>
+                            <li class="sidebox__item">
+                    <a href="https://ithelp.ithome.com.tw/questions/10199807" class="sidebox__itemLink">
+                        php的preg_match 的問題
+                    </a>
+                </li>
+                            <li class="sidebox__item">
+                    <a href="https://ithelp.ithome.com.tw/questions/10199849" class="sidebox__itemLink">
+                        請問公司突然停電後，要重新啟動虛擬機上的鼎新WORKFLOW GP 以及EASYFLOW，該如何操作有哪些程序?
+                    </a>
+                </li>
+                            <li class="sidebox__item">
+                    <a href="https://ithelp.ithome.com.tw/questions/10199781" class="sidebox__itemLink">
+                        2020年假如換工作選多益、托福、雅思選哪個英文認證進修好?
+                    </a>
+                </li>
+                            <li class="sidebox__item">
+                    <a href="https://ithelp.ithome.com.tw/questions/10199794" class="sidebox__itemLink">
+                        有線網路與無線網路對NAS讀寫速度差異很大
+                    </a>
+                </li>
+                            <li class="sidebox__item">
+                    <a href="https://ithelp.ithome.com.tw/questions/10199809" class="sidebox__itemLink">
+                        [C#]  GridView 按下選取，傳值給DetailsView
+                    </a>
+                </li>
+                    </ul>
+    </div>
+</div>
+
+<div class="sidebox">
+	<script src="https://itadapi.ithome.com.tw/media/serve?type=B3&channel=ithome_forum&encoding=Utf8"></script>
+</div>
+
+
+<div class="sidebox">
+    <div class="sidebox__header">
+        熱門文章
+    </div>
+    <div class="sidebox__body">
+        <ul class="list-unstyled sidebox__list">
+                            <li class="sidebox__item">
+                    <a href="https://ithelp.ithome.com.tw/articles/10232828" class="sidebox__itemLink">
+                        【詭詐的賭局】連續丟1個公平六面骰多次，66和65哪個容易出現? 
+                    </a>
+                </li>
+                            <li class="sidebox__item">
+                    <a href="https://ithelp.ithome.com.tw/articles/10232808" class="sidebox__itemLink">
+                        【實用機率】手遊抽卡要幾抽才能收集所有角色之分析?
+                    </a>
+                </li>
+                            <li class="sidebox__item">
+                    <a href="https://ithelp.ithome.com.tw/articles/10232835" class="sidebox__itemLink">
+                        前端入門-認識HTML、CSS、JS
+                    </a>
+                </li>
+                            <li class="sidebox__item">
+                    <a href="https://ithelp.ithome.com.tw/articles/10232834" class="sidebox__itemLink">
+                        Week25 - 用Minecraft來說明Docker為什麼這麼香 - Docker-Compose篇 [Server的終局之戰系列]
+                    </a>
+                </li>
+                            <li class="sidebox__item">
+                    <a href="https://ithelp.ithome.com.tw/articles/10232821" class="sidebox__itemLink">
+                        在資工系作業導入PM和UI設計的前端工程師，會成功嗎?
+                    </a>
+                </li>
+                            <li class="sidebox__item">
+                    <a href="https://ithelp.ithome.com.tw/articles/10232754" class="sidebox__itemLink">
+                        【leetcode練功坊】python廣義的二分搜索法概念
+                    </a>
+                </li>
+                            <li class="sidebox__item">
+                    <a href="https://ithelp.ithome.com.tw/articles/10232824" class="sidebox__itemLink">
+                        Line Friends 
+                    </a>
+                </li>
+                            <li class="sidebox__item">
+                    <a href="https://ithelp.ithome.com.tw/articles/10232813" class="sidebox__itemLink">
+                        前端入門-VS code安裝與前端套件介紹
+                    </a>
+                </li>
+                            <li class="sidebox__item">
+                    <a href="https://ithelp.ithome.com.tw/articles/10232815" class="sidebox__itemLink">
+                        【我可以你也可以的Node.js】第二一篇 - 如何使用 Socket.io 讓你的網頁不用 reload 也可以隨時更新資料
+                    </a>
+                </li>
+                            <li class="sidebox__item">
+                    <a href="https://ithelp.ithome.com.tw/articles/10232804" class="sidebox__itemLink">
+                        筆記- Vue透過Laravel 簡單上傳圖片/檔案
+                    </a>
+                </li>
+                    </ul>
+    </div>
+</div>
+
+<div class="sidebox">
+    <div class="sidebox__header clearfix">
+        一週點數排行
+        <a href="https://ithelp.ithome.com.tw/point_rank/total" class="sidebox__moreLink">更多點數排行<i class="fa fa-caret-right fa-fw"></i></a>
+    </div>
+    <div class="sidebox__body">
+        <ol class="list-unstyled sidebox__rank">
+
+                            <li class="sidebox__rankItem  sidebox__rankItem--bgyellow  ">
+                    <a href="https://ithelp.ithome.com.tw/users/20129008/profile" class="sidebox__rankItemLink">我問故我在 (sfl86280)</a>
+                </li>
+                            <li class="sidebox__rankItem  sidebox__rankItem--bgyellow  ">
+                    <a href="https://ithelp.ithome.com.tw/users/20001787/profile" class="sidebox__rankItemLink">海綿寶寶 (antijava)</a>
+                </li>
+                            <li class="sidebox__rankItem  sidebox__rankItem--bgyellow  ">
+                    <a href="https://ithelp.ithome.com.tw/users/20119546/profile" class="sidebox__rankItemLink">阿展展展 (eric211924)</a>
+                </li>
+                            <li class="sidebox__rankItem  ">
+                    <a href="https://ithelp.ithome.com.tw/users/20129199/profile" class="sidebox__rankItemLink">我問故我在 (hsg32565)</a>
+                </li>
+                            <li class="sidebox__rankItem  ">
+                    <a href="https://ithelp.ithome.com.tw/users/20128651/profile" class="sidebox__rankItemLink">glj8989332 (glj8989332)</a>
+                </li>
+                            <li class="sidebox__rankItem  ">
+                    <a href="https://ithelp.ithome.com.tw/users/20117954/profile" class="sidebox__rankItemLink">japhenchen (japhenchen)</a>
+                </li>
+                            <li class="sidebox__rankItem  ">
+                    <a href="https://ithelp.ithome.com.tw/users/20101641/profile" class="sidebox__rankItemLink">浩瀚星空 (yoching)</a>
+                </li>
+                            <li class="sidebox__rankItem  ">
+                    <a href="https://ithelp.ithome.com.tw/users/20117139/profile" class="sidebox__rankItemLink">雷伊 (amurorei)</a>
+                </li>
+                            <li class="sidebox__rankItem  ">
+                    <a href="https://ithelp.ithome.com.tw/users/20026603/profile" class="sidebox__rankItemLink">raytracy (raytracy)</a>
+                </li>
+                            <li class="sidebox__rankItem  ">
+                    <a href="https://ithelp.ithome.com.tw/users/20050647/profile" class="sidebox__rankItemLink">一級屠豬士 (hitomitanaka)</a>
+                </li>
+                    </ol>
+    </div>
+</div>    </div>
+            </div>
+        </div>
+    </div>
+
+        <footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="a970">
+                    <script src="https://itadapi.ithome.com.tw/media/serve?type=B1&channel=ithome_forum&encoding=Utf8"></script>
+                </div>
+                <ul class="list-inline footer__menu">
+                    <li class="footer__item">電週文化事業版權所有、轉載必究 | Copyright © <a href="https://www.ithome.com.tw/" target="_blank" class="footer__link">iThome</a></li>
+                    <li><a href="https://www.ithome.com.tw/aboutus/" target="_blank" class="footer__link">刊登廣告</a></li>
+                    <li><a href="https://www.ithome.com.tw/aboutus/" target="_blank" class="footer__link">授權服務</a></li>
+                    <li><a href="mailto:ithelp@mail.ithome.com.tw" class="footer__link">服務信箱</a></li>
+                    <li><a href="https://www.ithome.com.tw/terms" target="_blank" class="footer__link">隱私權聲明與會員使用條款</a></li>
+                    <li><a href="https://ithelp.ithome.com.tw/guide" class="footer__link">iT邦幫忙使用說明</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
+<script src="https://ithelp.ithome.com.tw/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/messenger/1.4.2/js/messenger.min.js"></script>
+<script>
+    Messenger.options = {
+        extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-left',
+        theme: 'block'
+    };
+
+    function getCookie(name) {
+        var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+
+        if (arr = document.cookie.match(reg))
+            return unescape(arr[2]);
+        else
+            return null;
+    }
+    
+    window.Notification.TOKEN = getCookie("_token");
+</script>
+<script>
+    $(function(){
+        $.ajaxPrefilter(function(options, originalOptions, jqXHR){
+            if (options.type.toLowerCase() !== "get" && !options.beforeSend) {
+                options.beforeSend = function(xhr) {
+                        xhr.setRequestHeader('X-CSRF-TOKEN', 'jdiUYICk3KH5CZktNbO7hs1s1Scth2GhwLpRrhI2');
+                    }
+            }
+        });
+    });
+</script>
+<script src="https://ithelp.ithome.com.tw/js/lib/vue.min.js"></script>
+<script src="https://ithelp.ithome.com.tw/js/lib/sweetalert.min.js"></script>
+<script src="https://ithelp.ithome.com.tw/js/event.js?20180530"></script>
+<script src="https://ithelp.ithome.com.tw/lib/select2/js/select2.full.min.js"></script>
+
+<script src="https://ithelp.ithome.com.tw/js/ImgPreview.js"></script>
+<!-- highlight -->
+<script src="https://ithelp.ithome.com.tw/js/highlight.pack.js"></script>
+<script>
+    $(function(){
+        $('pre code').each(function(i, block) {
+            $(block).attr('class');
+            hljs.highlightBlock(block);
+        });
+    })
+</script>
+<!--messenger, get cookie, token-->
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3355931-1']);
+  _gaq.push(['_trackPageview']);
+ (function() {
+   var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+   ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+   var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+ })();
+</script>
+
+
+
+    <div class="modal fade" id="AtUser" tabindex="-1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title text-center">At</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="invite_person" class="control-label">輸入對方的帳號或暱稱</label>
+                        <input type="text" class="form-control modal-input" id="invite_person" v-model="result_text" debounce="500">
+                        <div id="editor_tagged_ids"></div>
+                    </div>
+                    <ul class="list-unstyled invitation">
+                        <li style="text-align: center">
+                            <template v-if="!!result_text && !result_list.length && is_loading">
+                                Loading
+                            </template>
+                            <template v-if="!!result_text && !result_list.length && !is_loading">
+                                找不到結果。
+                            </template>
+                        </li>
+                        <li class="invitation-list" v-for="result in result_list">
+                            <img v-if="result && result.center_id" :src="'https://member.ithome.com.tw/avatars/' + result.center_id + '?s=ithelp'" style="float: left; margin-left: 10px; width: 48px; height: 48px;">
+                            <div class="invitation-list__content clearfix">
+                                <a class="btn btn-main invitation-list__btn" @click="AtUserByID(result.label, result.id)">標記</a>
+                                <div><a href="#" class="invitation-list__name">{{ result.label }}</a></div>
+                                <div><a href="#" class="invitation-list__account">{{ result.account }}</a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <a type="button" class="btn btn-main" data-dismiss="modal">關閉</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    </body>
+
+</html>
